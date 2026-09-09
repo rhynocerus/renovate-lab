@@ -9,7 +9,7 @@ Evaluate Renovate in a controlled GitHub repository without affecting production
 - Dedicated repository: `rhynocerus/renovate-lab`
 - Repository visibility: private during the experiment
 - No Docker required on the workstation
-- No access intended for PerData, Packet Runner, or other repositories
+- No access intended for unrelated private or active repositories
 - No automatic merging enabled during the initial evaluation
 - No production secrets or application code are stored here
 
@@ -45,7 +45,7 @@ During the pilot:
 - automatic merge remains disabled;
 - major updates will require manual review;
 - Renovate access must be restricted to `renovate-lab` only;
-- no other user repository is part of the experiment.
+- no other repository is part of the experiment.
 
 ## Status
 
