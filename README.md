@@ -1,5 +1,10 @@
 # Renovate Dependency Automation Lab
 
+[![Renovate Lab CI](https://github.com/rhynocerus/renovate-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/rhynocerus/renovate-lab/actions/workflows/ci.yml)
+![Renovate](https://img.shields.io/badge/Renovate-enabled-1A1F6C?logo=renovatebot&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
+
 Controlled GitHub laboratory for evaluating automated dependency management with Renovate, CI validation, and human review.
 
 ## What this lab demonstrates
