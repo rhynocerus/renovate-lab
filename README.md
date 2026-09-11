@@ -1,40 +1,102 @@
-# Renovate Lab
+# Renovate Dependency Automation Lab
 
-Controlled laboratory for learning and documenting automated dependency management with Renovate and GitHub.
+Controlled GitHub laboratory for evaluating automated dependency management with Renovate, CI validation, and human review.
 
-## Purpose
+## What this lab demonstrates
 
-This repository is intentionally isolated from my active development projects. It provides a disposable test fixture where Renovate can discover outdated dependencies, propose configuration, and create update pull requests without affecting production or portfolio code.
+This repository was created as an isolated test environment rather than enabling Renovate directly on an active application.
 
-## Current experiment
+The experiment uses the hosted Renovate GitHub App, deliberately outdated Node.js dependencies, and GitHub Actions smoke tests to observe both successful and breaking dependency upgrades without requiring Docker or a local Renovate service.
 
-The lab contains a minimal Node.js fixture with deliberately outdated dependencies. The goal is to observe the complete Renovate workflow:
+## Test workflow
 
-1. dependency discovery;
-2. onboarding configuration;
-3. Dependency Dashboard behavior;
-4. patch, minor, and major update proposals;
-5. generated pull requests;
-6. manual review and risk assessment.
+```text
+Outdated dependency
+        ↓
+     Renovate
+        ↓
+  Pull Request
+        ↓
+ GitHub Actions CI
+        ↓
+  ┌───────────────┐
+  │               │
+ green           red
+  │               │
+review          investigate
+  │               │
+merge           reject/fix
+```
 
-## Safety rules
+## Results
 
-- The repository remains private during the initial experiment.
-- Renovate will be granted access only to this repository.
-- Automatic merging is disabled during the pilot.
-- No production secrets or application source code belong here.
-- Docker is not required on the development workstation for this experiment.
+### ✅ Compatible update
 
-## Test fixture
+Pull request [#3](../../pull/3) updated ESLint from `8.57.0` to `8.57.1`.
 
-`package.json` is marked with `"private": true` to prevent accidental npm publication.
+- Renovate generated the PR automatically.
+- CI passed.
+- The diff was manually reviewed.
+- The update was merged successfully.
 
-Test dependencies are intentionally behind current releases so that Renovate has update candidates to detect.
+### ❌ Breaking major update detected
 
-## Documentation
+Pull request [#6](../../pull/6) proposed Chalk `4.1.2` → `6.0.0`.
 
-See [`docs/LAB-REPORT.md`](docs/LAB-REPORT.md) for the experiment log, safety model, phases, and conclusions.
+Installation succeeded, but the application smoke test failed at runtime with:
+
+```text
+TypeError: chalk.cyan is not a function
+```
+
+CI therefore exposed an API/module compatibility problem before the dependency could reach `main`. The PR was documented and closed without merging.
+
+This contrast is the central result of the laboratory: **Renovate automates discovery and proposal, while CI and human review control whether a change is safe to accept.**
+
+## Safety model
+
+- Renovate access is restricted to this repository.
+- Automatic dependency merging is disabled.
+- The test package is marked `"private": true`.
+- No production secrets or application source code are stored here.
+- Docker is not required on the development workstation.
+- Major dependency upgrades remain subject to manual review.
+
+## Detected dependency sources
+
+Renovate successfully discovered dependencies in both:
+
+- `package.json` via the npm manager;
+- `.github/workflows/ci.yml` via the GitHub Actions manager.
+
+It also created a [Dependency Dashboard](../../issues/5) to track open, rate-limited, and detected updates.
+
+## Repository structure
+
+```text
+renovate-lab/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── docs/
+│   └── LAB-REPORT.md
+├── src/
+│   └── index.js
+├── package.json
+├── renovate.json
+└── README.md
+```
+
+## Full report
+
+See [`docs/LAB-REPORT.md`](docs/LAB-REPORT.md) for the complete methodology, CI setup, observed Renovate behavior, failure analysis, conclusions, and recommendations for real projects.
+
+## Portfolio purpose
+
+The project documents hands-on work with dependency lifecycle management, GitHub Actions, pull-request review, software supply-chain hygiene, semantic-version risk, and controlled DevOps automation.
+
+An upstream fork of `renovatebot/renovate` is intentionally **not** part of this lab. A fork would only be useful if a concrete bug fix, test, code change, or documentation contribution is identified for the Renovate project itself.
 
 ## Status
 
-🧪 Lab prepared. Next step: connect the hosted Renovate GitHub App to **this repository only** and inspect its onboarding pull request before accepting any configuration.
+🧪 Core experiment completed. The repository remains private until its final portfolio review is complete.
