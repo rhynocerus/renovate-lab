@@ -1,0 +1,39 @@
+name: Renovate Lab CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Run application
+        run: npm start
+
+      - name: Check Prettier
+        run: npx prettier --check package.json src/index.js
+
+      - name: Check ESLint installation
+        run: npx eslint --version
+
+      - name: Check Vite installation
+        run: npx vite --version
