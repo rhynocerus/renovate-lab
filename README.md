@@ -5,13 +5,15 @@
 ![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
 
-Controlled GitHub laboratory for evaluating automated dependency management with Renovate, CI validation, and human review.
+Public portfolio laboratory for evaluating automated dependency management with Renovate, GitHub Actions CI, and human review.
+
+The goal is not merely to install a dependency bot. This repository demonstrates a controlled workflow in which Renovate discovers outdated dependencies and proposes changes, CI tests those changes, and a human reviewer decides whether they are safe to merge.
 
 ## What this lab demonstrates
 
-This repository was created as an isolated test environment rather than enabling Renovate directly on an active application.
+This repository was deliberately isolated from active applications so dependency automation could be tested without risking production or portfolio code.
 
-The experiment uses the hosted Renovate GitHub App, deliberately outdated Node.js dependencies, and GitHub Actions smoke tests to observe both successful and breaking dependency upgrades without requiring Docker or a local Renovate service.
+The experiment uses the hosted Renovate GitHub App, intentionally outdated Node.js dependencies, and GitHub Actions smoke tests. No Docker daemon or local Renovate service is required on the development workstation.
 
 ## Test workflow
 
@@ -33,7 +35,13 @@ review          investigate
 merge           reject/fix
 ```
 
-## Results
+## Experiment results
+
+| Case | Update | CI | Decision |
+| --- | --- | --- | --- |
+| Compatible patch | ESLint `8.57.0` → `8.57.1` | ✅ Passed | Merged |
+| Same-major comparison | Vite `5.4.0` → `5.4.21` | ✅ Passed | Observed |
+| Breaking major | Chalk `4.1.2` → `6.0.0` | ❌ Failed | Rejected |
 
 ### ✅ Compatible update
 
@@ -54,7 +62,7 @@ Installation succeeded, but the application smoke test failed at runtime with:
 TypeError: chalk.cyan is not a function
 ```
 
-CI therefore exposed an API/module compatibility problem before the dependency could reach `main`. The PR was documented and closed without merging.
+CI exposed an API/module compatibility problem before the dependency could reach `main`. The PR was documented and closed without merging.
 
 This contrast is the central result of the laboratory: **Renovate automates discovery and proposal, while CI and human review control whether a change is safe to accept.**
 
@@ -62,7 +70,7 @@ This contrast is the central result of the laboratory: **Renovate automates disc
 
 - Renovate access is restricted to this repository.
 - Automatic dependency merging is disabled.
-- The test package is marked `"private": true`.
+- The test package is marked `"private": true` to prevent accidental npm publication.
 - No production secrets or application source code are stored here.
 - Docker is not required on the development workstation.
 - Major dependency upgrades remain subject to manual review.
@@ -92,16 +100,27 @@ renovate-lab/
 └── README.md
 ```
 
+## Skills demonstrated
+
+This project provides hands-on evidence of work with:
+
+- dependency lifecycle management;
+- GitHub pull-request workflows;
+- GitHub Actions CI;
+- semantic-version risk assessment;
+- software supply-chain hygiene;
+- controlled automation policies;
+- failure analysis;
+- technical documentation.
+
 ## Full report
 
 See [`docs/LAB-REPORT.md`](docs/LAB-REPORT.md) for the complete methodology, CI setup, observed Renovate behavior, failure analysis, conclusions, and recommendations for real projects.
 
-## Portfolio purpose
+## Upstream contribution policy
 
-The project documents hands-on work with dependency lifecycle management, GitHub Actions, pull-request review, software supply-chain hygiene, semantic-version risk, and controlled DevOps automation.
-
-An upstream fork of `renovatebot/renovate` is intentionally **not** part of this lab. A fork would only be useful if a concrete bug fix, test, code change, or documentation contribution is identified for the Renovate project itself.
+An upstream fork of `renovatebot/renovate` is intentionally **not** part of this lab. A fork becomes useful only if the experiment identifies a concrete bug fix, test improvement, code change, or documentation contribution worth proposing upstream.
 
 ## Status
 
-🧪 Core experiment completed. The repository remains private until its final portfolio review is complete.
+✅ Core experiment completed and published as a portfolio laboratory. Renovate remains active with automatic dependency merging disabled, so future update proposals can continue to be reviewed safely.
